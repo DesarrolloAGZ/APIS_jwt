@@ -1,1 +1,14 @@
+# Test de lectura
+# Deny from all
+
 SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
+RewriteEngine On
+
+# # Verifica si no es un archivo físico
+# RewriteCond %{REQUEST_FILENAME} !-f
+
+# # Verifica si no es un directorio
+# RewriteCond %{REQUEST_FILENAME} !-d
+
+# # Redirige todo a agz.php (para rutas que no sean archivos o directorios físicos)
+# RewriteRule ^(.*)$ agz.php [QSA,L]
