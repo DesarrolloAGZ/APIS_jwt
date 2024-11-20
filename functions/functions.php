@@ -2,7 +2,6 @@
 # Variable de entorno
 define('URL', '/APIS_jwt/');
 
-
 # Funcion para validar el token obtenido con el entorno JWT
 function validaToken($token) {
     # Verifica que el token no esté vacío
