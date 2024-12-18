@@ -56,11 +56,36 @@ function validaToken($token) {
     return true;
 }
 
-# Funcion para obtener los resultados de las querys 
+# Funcion para obtener los resultados de las querys  de Agrizar 1
 function obtenerResultados($query_psg, $pdo){
     try {
         // Prepara la consulta postgresql
         $stmt = $pdo->prepare($query_psg);
+        // Ejecuta la consulta
+        $stmt->execute(); 
+        
+        // Obtenemos los resultados como un arreglo asociativo
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $GLOBALS['data']['numero_resultados'] = count($results);
+        // Si se obtienen resultados, devolverlos como JSON
+        if ($results) {
+            $GLOBALS['data']['resultados'] = $results;
+        } else {
+            // Si no hay resultados, devolvera un error en formato JSON
+            $GLOBALS['data']['resultados'] = 'No se encontraron resultados.';
+        }
+    } catch (PDOException $e) {
+        // Si ocurre un error, devolvera el error en formato JSON
+        $GLOBALS['data']['error'] = "Error en la consulta: " . $e->getMessage();
+    }
+}
+
+# Funcion para obtener los resultados de las querys  de Agrizar 2
+function obtenerResultadosN($query_psgN, $pdoN){
+    try {
+        // Prepara la consulta postgresql
+        $stmt = $pdoN->prepare($query_psgN);
         // Ejecuta la consulta
         $stmt->execute(); 
         

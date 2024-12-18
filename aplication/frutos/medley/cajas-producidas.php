@@ -25,7 +25,7 @@
         # Verificar si el token es válido usando la función
         if (!validaToken($token)) 
         {
-            $GLOBALS['data']['token'] = 'Acceso denegado. Token inválido o expirado.';
+            $GLOBALS['data']['token'] = "Acceso denegado. Token inválido o expirado.";
             echo json_encode($GLOBALS['data']);
             exit();
         }
@@ -53,9 +53,12 @@
                     $fechaFinTimestamp = strtotime(str_replace('/', '-', $fechaFin) . ' +1 day'); # Cambiar '/' a '-' para strtotime
                     $fechaFin = date('d/m/Y', $fechaFinTimestamp) . " 04:59:59.00"; 
 
-                    $fruto = 16; # Medley
+                    /*____________ PARAMETROS ____________*/
+                    /*#*/
+                    /*#*/   $fruto = 16; # Medley 
+                    /*#*/
 
-                    $GLOBALS['data']['reporte'] = 'Cajas producidas medley.';
+                    $GLOBALS['data']['reporte'] = "Cajas producidas medley.";
 
                     $queryIds = " SELECT "
                                     . " dp.fechacreacion::DATE AS fecha, "
@@ -106,29 +109,30 @@
                                     . " v.nombre, "
                                     . " cip.kilosprocesados, "
                                     . " cpa.peso ";
+
                     obtenerResultados($queryIds, $pdo);
                 }
                 else
                 {
-                    $GLOBALS['data']['error'] = 'Formato de fechas no válido. Debe tener el formato dd/mm/yyyy.';
+                    $GLOBALS['data']['error'] = "Formato de fechas no válido. Debe tener el formato dd/mm/yyyy.";
                 }
             }
             else
             {
-                $GLOBALS['data']['error'] = 'No se especificó el parametro fechaInicio y fechaFin.';
+                $GLOBALS['data']['error'] = "No se especificó el parametro 'fechaInicio' o 'fechaFin' correctamente.";
             }
         } 
         else 
         {
             # Maneja otros métodos HTTP
-            $GLOBALS['data']['error'] = 'Método no permitido.';
+            $GLOBALS['data']['error'] = "Método no permitido.";
             http_response_code(405); // 405 Method Not Allowed
         }
     } 
     else 
     {
         # No se proporcionó el token
-        $GLOBALS['data']['token'] = 'Acceso denegado. No se proporcionó el token.';
+        $GLOBALS['data']['token'] = "Acceso denegado. No se proporcionó el token.";
     }
     echo json_encode($GLOBALS['data']);
 ?>

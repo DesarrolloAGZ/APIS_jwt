@@ -25,7 +25,7 @@
         # Verificar si el token es válido usando la función
         if (!validaToken($token)) 
         {
-            $GLOBALS['data']['token'] = 'Acceso denegado. Token inválido o expirado.';
+            $GLOBALS['data']['token'] = "Acceso denegado. Token inválido o expirado.";
             echo json_encode($GLOBALS['data']);
             exit();
         }
@@ -53,16 +53,19 @@
                     $fechaFinTimestamp = strtotime(str_replace('/', '-', $fechaFin) . ' +1 day'); # Cambiar '/' a '-' para strtotime
                     $fechaFin = date('d/m/Y', $fechaFinTimestamp) . " 04:59:59.00"; 
 
-                    $fruto = 3; # Esparrago
-
-                    $GLOBALS['data']['reporte'] = 'Cajas producidas esparrago.';
+                    /*____________ PARAMETROS ____________*/
+                    /*#*/
+                    /*#*/   $fruto = 3; # Esparrago
+                    /*#*/
+                    
+                    $GLOBALS['data']['reporte'] = "Cajas producidas esparrago.";
 
                     $queryIds = " SELECT "
                                     . " dp.fechacreacion::DATE AS fecha, "
-                                    . " cpa.productoidempaque AS id_empaque, "
                                     . " cpa.productonombre AS producto, "
                                     . " cpa.frutoNombre AS fruto, "
                                     . " cpa.tamanonombre AS tamaño, "
+                                    . " cpa.presentacionnombre AS presentacion, "
                                     . " COUNT(dp.detallepalletid) AS cajas, "
                                     . " ROUND(CASE WHEN COUNT(dp.detallepalletid) = 0 THEN 0 ELSE SUM(cip.kilosprocesados)::DECIMAL / COUNT(dp.detallepalletid) END, 2) AS peso, "
                                     . " cpa.peso AS kilos_empacables, "
@@ -71,7 +74,7 @@
                                     . " COALESCE(v.nombre, 'sin variedad') AS variedad "
                                 . " FROM "
                                     . " catalogoidentificadoresproduccion cip "
-                                . " LEFT JOIN "
+                                . " JOIN "
                                     . " detallepalletsESP dp ON cip.identificadorproduccion = dp.identificadorproduccion "
                                 . " LEFT JOIN "
                                     . " catalogoproductoactivo cpa ON dp.productoid = cpa.productoid "
@@ -96,40 +99,39 @@
                                     . " ) "
                                     . " AND (dp.estadoid = 1 OR dp.estadoid IS NULL) "
                                 . " GROUP BY "
-                                    . " cip.identificadorproduccion, "
                                     . " cip.bandanombre, "
                                     . " dp.fechacreacion::DATE, "
-                                    . " cpa.productoidempaque, "
                                     . " cpa.productonombre, "
                                     . " cpa.frutoNombre, "
+                                    . " cpa.presentacionnombre, "
                                     . " cpa.tamanonombre, "
                                     . " v.nombre, "
                                     . " cip.kilosprocesados, "
                                     . " cpa.peso ";
-                                    echo $queryIds;
+                                    
                     obtenerResultados($queryIds, $pdo);
                 }
                 else
                 {
-                    $GLOBALS['data']['error'] = 'Formato de fechas no válido. Debe tener el formato dd/mm/yyyy.';
+                    $GLOBALS['data']['error'] = "Formato de fechas no válido. Debe tener el formato dd/mm/yyyy.";
                 }
             }
             else
             {
-                $GLOBALS['data']['error'] = 'No se especificó el parametro fechaInicio y fechaFin.';
+                $GLOBALS['data']['error'] = "No se especificó el parametro 'fechaInicio' o 'fechaFin' correctamente.";
             }
         } 
         else 
         {
             # Maneja otros métodos HTTP
-            $GLOBALS['data']['error'] = 'Método no permitido.';
+            $GLOBALS['data']['error'] = "Método no permitido.";
             http_response_code(405); // 405 Method Not Allowed
         }
     } 
     else 
     {
         # No se proporcionó el token
-        $GLOBALS['data']['token'] = 'Acceso denegado. No se proporcionó el token.';
+        $GLOBALS['data']['token'] = "Acceso denegado. No se proporcionó el token.";
     }
     echo json_encode($GLOBALS['data']);
 ?>
